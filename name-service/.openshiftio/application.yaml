@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: nodejs-istio-circuit-breaker-greeting
+  name: launchpad-builder
   annotations:
     description: This template creates a Build Configuration using an S2I builder.
     tags: instant-app
@@ -30,7 +30,7 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: nodejs-istio-circuit-breaker-greeting
+    name: nodejs-istio-circuit-breaker-name
   spec: {}
 - apiVersion: v1
   kind: ImageStream
@@ -45,12 +45,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: nodejs-istio-circuit-breaker-greeting
+    name: nodejs-istio-circuit-breaker-name
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: nodejs-istio-circuit-breaker-greeting:latest
+        name: nodejs-istio-circuit-breaker-name:latest
     postCommit: {}
     resources: {}
     source:
@@ -85,23 +85,23 @@ objects:
         targetPort: 8080
     type: ClusterIP
     selector:
-      project: nodejs-istio-circuit-breaker-greeting
+      project: nodejs-istio-circuit-breaker-name
       provider: nodeshift
   metadata:
-    name: nodejs-istio-circuit-breaker-greeting
+    name: nodejs-istio-circuit-breaker-name
     labels:
       provider: nodeshift
       expose: 'true'
-      project: nodejs-istio-circuit-breaker-greeting
+      project: nodejs-istio-circuit-breaker-name
       version: 2.0.0
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    name: nodejs-istio-circuit-breaker-greeting
+    name: nodejs-istio-circuit-breaker-name
     labels:
-      app: nodejs-istio-circuit-breaker-greeting
+      app: nodejs-istio-circuit-breaker-name
       provider: nodeshift
-      project: nodejs-istio-circuit-breaker-greeting
+      project: nodejs-istio-circuit-breaker-name
       version: 2.0.0
   spec:
     template:
@@ -119,8 +119,8 @@ objects:
                 scheme: HTTP
               initialDelaySeconds: 60
               periodSeconds: 30
-            image: nodejs-istio-circuit-breaker-greeting
-            name: nodejs-istio-circuit-breaker-greeting
+            image: nodejs-istio-circuit-breaker-name
+            name: nodejs-istio-circuit-breaker-name
             securityContext:
               privileged: false
             ports:
@@ -131,14 +131,14 @@ objects:
         annotations:
           sidecar.istio.io/inject: "true"
         labels:
-          app: nodejs-istio-circuit-breaker-greeting
-          project: nodejs-istio-circuit-breaker-greeting
+          app: nodejs-istio-circuit-breaker-name
+          project: nodejs-istio-circuit-breaker-name
           provider: nodeshift
           version: 2.0.0
     replicas: 1
     selector:
-      app: nodejs-istio-circuit-breaker-greeting
-      project: nodejs-istio-circuit-breaker-greeting
+      app: nodejs-istio-circuit-breaker-name
+      project: nodejs-istio-circuit-breaker-name
       provider: nodeshift
     triggers:
       - type: ConfigChange
@@ -146,25 +146,7 @@ objects:
         imageChangeParams:
           automatic: true
           containerNames:
-            - nodejs-istio-circuit-breaker-greeting
+            - nodejs-istio-circuit-breaker-name
           from:
             kind: ImageStreamTag
-            name: 'nodejs-istio-circuit-breaker-greeting:latest'
-- apiVersion: extensions/v1beta1
-  kind: Ingress
-  metadata:
-    name: nodejs-istio-circuit-breaker-gateway
-    annotations:
-      kubernetes.io/ingress.class: "istio"
-  spec:
-    rules:
-    - http:
-        paths:
-        - path: /.*
-          backend:
-            serviceName: nodejs-istio-circuit-breaker-greeting
-            servicePort: 8080
-        - path: /api/greeting
-          backend:
-            serviceName: nodejs-istio-circuit-breaker-greeting
-            servicePort: 8080
+            name: 'nodejs-istio-circuit-breaker-name:latest'
