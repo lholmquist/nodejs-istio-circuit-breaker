@@ -40,7 +40,10 @@ app.use(cors());
 // Name service API
 app.get('/api/name', (request, response) => {
   const {from, delay} = request.query;
-  response.send('World!');
+  const name = from ? `from ${from}` : '';
+  setTimeout(() => {
+    response.send(`World ${name}`);
+  }, delay);
 });
 
 // Expose the license.html at http[s]://[host]:[port]/licenses/licenses.html

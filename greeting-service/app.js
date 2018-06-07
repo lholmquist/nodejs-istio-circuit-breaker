@@ -45,7 +45,7 @@ app.get('/api/greeting', (request, response) => {
   const delay = request.query ? request.query.delay : 0;
   nameService(`${nameServiceHost}/api/name?from=${from}&delay=${delay}`).then(name => {
     response.send({content: `Hello, ${name}`, from});
-  }).catch(err => {
+  }).catch(_ => {
     response.send({content: `Hello, Fallback`, from});
   });
 });

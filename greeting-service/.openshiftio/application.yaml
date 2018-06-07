@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: nodejs-istio-circuit-breaker-greeting
+  name: nodejs-istio-circuit-breaker-greeting-service
   annotations:
     description: This template creates a Build Configuration using an S2I builder.
     tags: instant-app
