@@ -28,7 +28,14 @@ oc new-project <whatever valid project name you want>
 
 #### With Source to Image build (S2I)
 
-Run the following commands to apply and execute the OpenShift templates that will configure and deploy the applications:
+To deploy the booster with Nodeshift, run the following command:
+
+```bash
+$ ./start-openshift.sh # Launch the booster app
+```
+
+Or run the following commands to apply and execute the OpenShift templates that will configure and deploy the applications:
+
 ```bash
 find . | grep openshiftio | grep application | xargs -n 1 oc apply -f
 
