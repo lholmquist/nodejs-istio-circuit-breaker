@@ -41,7 +41,6 @@
   },
   "homepage": "https://github.com/bucharest-gold/nodejs-circuit-breaker",
   "devDependencies": {
-    "nodeshift": "~1.9.0",
     "nsp": "~2.6.2",
     "rhoaster": "^0.2.0",
     "supertest": "^3.0.0",

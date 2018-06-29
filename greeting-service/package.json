@@ -44,7 +44,6 @@
   },
   "homepage": "https://github.com/bucharest-gold/nodejs-istion-circuit-breaker",
   "devDependencies": {
-    "nodeshift": "~1.9.0",
     "nsp": "~2.6.2",
     "nyc": "~11.0.3",
     "rhoaster": "^0.2.0",
