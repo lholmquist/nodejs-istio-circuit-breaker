@@ -35,7 +35,7 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: runtime
+    name: nodejs-istio-circuit-breaker-name-runtime
   spec:
     tags:
     - name: latest
@@ -64,7 +64,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: runtime:latest
+          name: nodejs-istio-circuit-breaker-name-runtime:latest
         incremental: true
     triggers:
     - github:
