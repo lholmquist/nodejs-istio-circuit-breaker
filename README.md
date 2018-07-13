@@ -39,45 +39,51 @@ oc new-app --template=nodejs-istio-circuit-breaker-name-service -p SOURCE_REPOSI
 
 ## Use Cases
 
+Any steps issuing `oc` commands require the user to have run `oc login` first and switched to the appropriate project with `oc project <project name>`.
+
 ### Without Istio Configuration
 
-1. Retrieve the URL for the Istio Ingress route, with the below command, and open it in a web browser.
+1. Create a Gateway and Virtual Service in Istio so that we can access the service within the Mesh:
     ```
-    echo http://$(oc get route istio-ingress -o jsonpath='{.spec.host}{"\n"}' -n istio-system)/
+    oc apply -f istio-config/gateway.yaml
     ```
-2. The user will be presented with the web page of the Booster
-3. Click "Start" to issue repeating concurrent requests in batches of 10 to the greeting service
-4. Click "Stop" to cease issuing more requests
-5. The number of concurrent requests can be set to anything between 1 and 20
-6. There should be no failures and all calls are ok
+2. Retrieve the URL for the Istio Ingress Gateway route, with the below command, and open it in a web browser.
+    ```
+    echo http://$(oc get route istio-ingressgateway -o jsonpath='{.spec.host}{"\n"}' -n istio-system)/nodejs-istio-circuit-breaker/
+    ```
+3. The user will be presented with the web page of the Booster
+4. Click "Start" to issue repeating concurrent requests in batches of 10 to the greeting service
+5. Click "Stop" to cease issuing more requests
+6. The number of concurrent requests can be set to anything between 1 and 20
+7. There should be no failures and all calls are ok
 
 ### With Istio Configuration
 
 #### Initial Setup
 
 1. Run `oc project <project>` to connect to the project created by the Launcher, or one you created in a previous step
-2. Create a `RouteRule` for the name service, which is required to use `DestinationPolicy` later
+2. Create a `VirtualService` for the name service, which is required to use `DestinationRule` later
     ````
-    oc create -f rules/route-rule.yml -n $(oc project -q)
+    oc create -f istio-config/virtual-service.yml -n $(oc project -q)
     ````
 3. Trying the application again you will notice no change from the current behavior
 
 #### Istio Circuit Breaker Configuration
 
-1. Apply a `DestinationPolicy` that activates Istio's Circuit Breaker on the name service,
+1. Apply a `DestinationRule` that activates Istio's Circuit Breaker on the name service,
 configuring it to allow a maximum of 100 concurrent connections
     ````
-    oc create -f rules/initial-destination-policy.yml -n $(oc project -q)
+    oc create -f istio-config/initial-destination-rule.yml -n $(oc project -q)
     ````
 2. Trying the application again you should see no change,
 as we're only able to make up to 20 concurrent connections which is not enough to trigger the circuit breaker.
-3. Remove the initial destination policy
+3. Remove the initial destination rule
     ````
-    oc delete -f rules/initial-destination-policy.yml
+    oc delete -f istio-config/initial-destination-rule.yml
     ````
-4. Apply a more restrictive destination policy
+4. Apply a more restrictive destination rule
     ````
-    oc create -f rules/restrictive-destination-policy.yml -n $(oc project -q)
+    oc create -f istio-config/restrictive-destination-rule.yml -n $(oc project -q)
     ````
 5. Trying the application again you can see about a third of all requests are triggering the fallback response because the circuit is open
 6. If we check "Simulate load", which adds a delay into how quickly the name service responds, and click "Start".
