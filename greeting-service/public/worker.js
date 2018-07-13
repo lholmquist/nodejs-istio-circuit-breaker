@@ -11,6 +11,11 @@ onmessage = function (e) {
 
     var delay =  e.data.delay ? "&delay=250" : "";
 
-    xhr.open('GET', '/api/greeting?from=' + e.data.from + delay);
+    var getUrl = "api/greeting";
+    if (!e.data.href.endsWith("/")) {
+      getUrl = "nodejs-istio-circuit-breaker/" + getUrl;
+    }
+
+    xhr.open('GET', getUrl + '?from=' + e.data.from + delay);
     xhr.send();
 };
