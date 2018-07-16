@@ -35,7 +35,7 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: nodejs-istio-circuit-breaker-greeting-runtime
+    name: runtime
   spec:
     tags:
     - name: latest
@@ -64,7 +64,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: nodejs-istio-circuit-breaker-greeting-runtime:latest
+          name: runtime:latest
         incremental: true
     triggers:
     - github:
@@ -93,7 +93,7 @@ objects:
       provider: nodeshift
       expose: 'true'
       project: nodejs-istio-circuit-breaker-greeting
-      version: 2.0.1
+      version: 2.1.0
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
@@ -102,7 +102,7 @@ objects:
       app: nodejs-istio-circuit-breaker-greeting
       provider: nodeshift
       project: nodejs-istio-circuit-breaker-greeting
-      version: 2.0.1
+      version: 2.1.0
   spec:
     template:
       spec:
@@ -134,7 +134,7 @@ objects:
           app: nodejs-istio-circuit-breaker-greeting
           project: nodejs-istio-circuit-breaker-greeting
           provider: nodeshift
-          version: 2.0.1
+          version: 2.1.0
     replicas: 1
     selector:
       app: nodejs-istio-circuit-breaker-greeting
@@ -150,3 +150,21 @@ objects:
           from:
             kind: ImageStreamTag
             name: 'nodejs-istio-circuit-breaker-greeting:latest'
+- apiVersion: extensions/v1beta1
+  kind: Ingress
+  metadata:
+    name: nodejs-istio-circuit-breaker-gateway
+    annotations:
+      kubernetes.io/ingress.class: "istio"
+  spec:
+    rules:
+    - http:
+        paths:
+        - path: /.*
+          backend:
+            serviceName: nodejs-istio-circuit-breaker-greeting
+            servicePort: 8080
+        - path: /api/greeting
+          backend:
+            serviceName: nodejs-istio-circuit-breaker-greeting
+            servicePort: 8080
