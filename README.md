@@ -30,6 +30,12 @@ oc new-project <whatever valid project name you want> # not required
 
 ### Build and Deploy the Application
 
+#### Launcher Flow Setup
+
+If the Booster is installed through the Launcher and the Continuous Delivery flow, no additional steps are necessary.
+
+Skip to the _Use Cases_ section.
+
 #### With Source to Image build (S2I)
 
 Run the following commands to apply and execute the OpenShift templates that will configure and deploy the applications:
