@@ -22,6 +22,8 @@ Wait until the `openshift-ansible-istio-installer-job-xxxx` job has completed. I
 ```
 oc login -u system:admin
 oc adm policy add-cluster-role-to-user admin developer --as=system:admin
+oc adm policy add-scc-to-user anyuid -z default -n myproject
+oc adm policy add-scc-to-user privileged -z default -n myproject
 oc login -u developer -p developer
 oc new-project <whatever valid project name you want> # not required
 ```
